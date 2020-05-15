@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2020 by Adam Hassan - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Adam Hassan <adamhassan@pm.me>, May 2020
  */
 package mib;
 
 import oru.inf.InfDB;
 
-/**
- *
- * @author adahass
- */
 public class AlienFrame extends javax.swing.JFrame {
 
     private static InfDB db;
@@ -24,7 +21,7 @@ public class AlienFrame extends javax.swing.JFrame {
         this.db = db;
         this.alienID = alienID;
         
-        welcomeLabel.setText("VÃ¤lkommen Alien " + alienID);
+        welcomeLabel.setText("Välkommen Alien " + alienID);
     }
 
     /**

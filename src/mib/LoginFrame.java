@@ -1,32 +1,29 @@
+/* 
+ * Copyright (C) 2020 by Adam Hassan - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Adam Hassan <adamhassan@pm.me>, May 2020
+ */
 package mib;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import mib.Helpers.Validate;
+import mib.Helpers.Constant;
+
+import javax.swing.JOptionPane;
 
 import oru.inf.InfDB;
 import oru.inf.InfException;
 
-import javax.swing.JOptionPane;
-
-/**
- *
- * @author adahass
- */
 public class LoginFrame extends javax.swing.JFrame {
-
     private static InfDB db;
     
     /**
      * Creates new form Login
+     * @param db
      */
     public LoginFrame(InfDB db) {
         initComponents();
-        this.db = db;
+        LoginFrame.db = db;
         
         this.setTitle("MiB - Login");
     }
@@ -85,20 +82,15 @@ public class LoginFrame extends javax.swing.JFrame {
         usernameLabel.setText("Ange ID");
         usernameLabel.setAlignmentY(0.0F);
 
-        passwordLabel.setText("Lösenord");
+        passwordLabel.setText("L�senord");
         passwordLabel.setAlignmentY(0.0F);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Copyright © 2020 Men in Black. Alla rättigheter förbehålls.");
+        jLabel2.setText("Copyright � 2020 Men in Black. Alla r�ttigheter f�rbeh�lls.");
 
         loginType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Som Agent", "Som Alien" }));
         loginType.setToolTipText("");
-        loginType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginTypeActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,14 +140,20 @@ public class LoginFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+  /**
+   * Validates login credentials
+   * Checks a match for login ID & password in database
+   * Prints out relevant error on fail
+   * @param evt 
+   */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        // TODO add your handling code here:
-
         if (Validate.isTextEmpty(usernameTextField) && Validate.isTextEmpty(passwordTextField)) {
             String usernameID = usernameTextField.getText();
             String password = new String(passwordTextField.getPassword());
             
-            if (String.valueOf(loginType.getSelectedItem()) == "Som Agent") {                
+            if (String.valueOf(loginType.getSelectedItem()).equals(Constant.LOGIN_TYPE_AGENT)) {                
+                System.out.println("Login av typ: Agent");
+                
                 try {
                     if (password.equals(db.fetchSingle("SELECT LOSENORD FROM AGENT where Agent_ID=" + usernameID))) {
                         if (db.fetchSingle("SELECT ADMINISTRATOR FROM AGENT WHERE AGENT_ID =" + usernameID).equals("J")){
@@ -167,51 +165,28 @@ public class LoginFrame extends javax.swing.JFrame {
                         this.dispose();
                         new AgentFrame(db, usernameID, false).setVisible(true);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Ditt Agent ID eller lösenord är fel.");
+                        JOptionPane.showMessageDialog(null, Constant.ERROR_LOGIN_AGENT);
                     }
                 } catch (InfException exception) {
-                    JOptionPane.showMessageDialog(null, "Någonting gick fel med databasuppkopplingen.");
-                    System.out.println("Felet är: " + exception.getMessage());
+                    JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+                    System.out.println(exception.getMessage());
                 }
-            } else if (String.valueOf(loginType.getSelectedItem()) == "Som Alien") {
-                System.out.println("Alien vald");
+            } else if (String.valueOf(loginType.getSelectedItem()).equals(Constant.LOGIN_TYPE_ALIEN)) {
+                System.out.println("Logintyp: Alien");
                 try {
                     if (password.equals(db.fetchSingle("SELECT LOSENORD FROM ALIEN where Alien_ID=" + usernameID))) {
                         this.dispose();
                         new AlienFrame(db, usernameID).setVisible(true);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Ditt Alien ID eller lösenord är fel.");
+                        JOptionPane.showMessageDialog(null, Constant.ERROR_LOGIN_ALIEN);
                     }
                 } catch (InfException exception) {
-                    JOptionPane.showMessageDialog(null, "Någonting gick fel med databasuppkopplingen.");
-                    System.out.println("Felet är: " + exception.getMessage());
+                    JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+                    System.out.println(exception.getMessage());
                 }
             }
-            
-
-            
-            
-//            System.out.println(password);
-//            String statement = "select * from agent where losenord='" + password + "'";
-//            System.out.println(statement);
-//            try {
-//                HashMap<String, String> agent = idb.fetchRow(statement);
-//                
-//                
-//                for (Object value : agent.values()) {
-//                    System.out.println(value.toString());
-//                }
-//                
-//            } catch (InfException e) {
-//                JOptionPane.showMessageDialog(null, "Query could not be executed.");
-//                System.out.println(e);
-//            }
         }
     }//GEN-LAST:event_loginButtonActionPerformed
-
-    private void loginTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginTypeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_loginTypeActionPerformed
 
     /**
      * @param args the command line arguments

@@ -1,0 +1,10 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Copyright © 2020 by Adam Hassan - All Rights Reserved
+${licensePrefix}Unauthorized copying of this file, via any medium is strictly prohibited ${licensePrefix}
+${licensePrefix}Proprietary and confidential ${licensePrefix}
+${licensePrefix}Written by Adam Hassan <adamhassan@pm.me>, May 2020 ${licensePrefix}
+<#if licenseLast??>
+${licenseLast}
+</#if>
