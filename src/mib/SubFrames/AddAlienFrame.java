@@ -203,7 +203,7 @@ public class AddAlienFrame extends javax.swing.JFrame {
                         String raceQuery = "INSERT INTO WORM VALUES (" + newAlienID + ")";
                         System.out.println(raceQuery);
                         db.insert(raceQuery);
-                    } 
+                    } // TODO handle other races (look at db for reference)
 //                    else if (raceComboBox.getSelectedItem().toString().equals("Squid")){
 //                        rasFraga = "INSERT INTO SQUID VALUES (" + newAlienID + ", " + Integer.parseInt(nyAlienExtraAttributTextField.getText()) + ")";
 //                        rasInfo = "\nRas: Squid\nArmar: " + nyAlienExtraAttributTextField.getText().toString();
