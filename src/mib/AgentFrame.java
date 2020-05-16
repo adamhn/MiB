@@ -41,21 +41,15 @@ public class AgentFrame extends javax.swing.JFrame {
         AgentFrame.isAdmin = isAdmin;
 
         // Rquired initializers upon the beginning of AgentFrame life cycle.
-        initLabelData();
-        initComboBoxData();
+        setupInitialData();
+        setupAdminPermissions(this.isAdmin);
     }
 
     /**
      * Sets initial data for labels in jFrame
      * Displays admin tag on id labels for users with admin status
      */
-    private void initLabelData() {
-        if (!isAdmin) {
-            idLabel.setText("Agent: " + agentID);
-        } else {
-            idLabel.setText("Agent: " + agentID + " - Administratör");
-        }
-
+    private void setupInitialData() {
         try {
             nameLabel.setText(db.fetchSingle("SELECT NAMN FROM AGENT WHERE AGENT_ID =" + agentID));
             phoneLabel.setText(db.fetchSingle("SELECT TELEFON FROM AGENT WHERE AGENT_ID =" + agentID));
@@ -64,16 +58,11 @@ public class AgentFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
-    }
-
-    /**
-     * Set combo boxes that are in need of area data
-     */
-    private void initComboBoxData() {
+        
         setAreaComboBox(areaComboBox);
         setAreaComboBox(searchedAreaComboBox);
     }
-
+    
     /**
      * Sets area initial drop down list from db
      * Areas are set on multiple drop downs therefore separating in a method
@@ -94,6 +83,24 @@ public class AgentFrame extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Hiding different areas/abilities depending on user permissions
+     * @param isAdmin whether the current user is an admin or not
+     */
+    private void setupAdminPermissions(boolean isAdmin) {
+        if (!isAdmin) {
+            idLabel.setText("Agent: " + agentID);
+            
+            adminTabbedPanel.remove(addChangeDeleteAgent);
+            deleteEquipment.setVisible(false);
+            deleteAlienButton.setVisible(false);
+            setChefPanel.setVisible(false);
+            setAreaChefPanel.setVisible(false);
+        } else {
+            idLabel.setText("Agent: " + agentID + " - Administratör");
+        }
+    }
+    
     /**
      * Called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,7 +161,21 @@ public class AgentFrame extends javax.swing.JFrame {
         areaChefAgentIdLabel = new javax.swing.JLabel();
         areaChefPhoneLabel = new javax.swing.JLabel();
         titleForAreaChefPhone = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
+        setChefPanel = new javax.swing.JPanel();
+        labelForCurrentChef = new javax.swing.JLabel();
+        currentChefTextField = new javax.swing.JTextField();
+        labelForChooseChefComboBox = new javax.swing.JLabel();
+        chooseChefComboBox = new javax.swing.JComboBox<>();
+        setChefPlace = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        setAreaChefPanel = new javax.swing.JPanel();
+        jSeparator3 = new javax.swing.JSeparator();
+        labelForAreaChef = new javax.swing.JLabel();
+        setChefAreaComboBox = new javax.swing.JComboBox<>();
+        setNewAreaChef = new javax.swing.JButton();
+        equipmentPanel = new javax.swing.JPanel();
+        addEquipment = new javax.swing.JButton();
+        deleteEquipment = new javax.swing.JButton();
         resultLabel = new javax.swing.JLabel();
         changePassword = new javax.swing.JButton();
         resultScrollPanel = new javax.swing.JScrollPane();
@@ -258,9 +279,10 @@ public class AgentFrame extends javax.swing.JFrame {
         idLabel.setText("Agent: ");
         idLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        adminTabbedPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         adminTabbedPanel.setToolTipText("");
-        adminTabbedPanel.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        adminTabbedPanel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
+        searchPanel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         searchPlaceLabel.setLabelFor(searchAliensInPlaceButton);
         searchPlaceLabel.setText("Hitta aliens på angiven plats:");
@@ -465,8 +487,8 @@ public class AgentFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(addChangeDeleteAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(changeAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                    .addComponent(deleteAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                    .addComponent(changeAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                    .addComponent(deleteAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
                 .addContainerGap())
         );
         addChangeDeleteAlienLayout.setVerticalGroup(
@@ -478,13 +500,13 @@ public class AgentFrame extends javax.swing.JFrame {
                 .addComponent(changeAlienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteAlienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
-        adminTabbedPanel.addTab("Lägg till/ändra Alien", addChangeDeleteAlien);
+        adminTabbedPanel.addTab("Hantera Aliens", addChangeDeleteAlien);
 
         addAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        addAgentButton.setText("Lägg till Alien");
+        addAgentButton.setText("Lägg till Agent");
         addAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
         addAgentButton.setContentAreaFilled(false);
         addAgentButton.addActionListener(new java.awt.event.ActionListener() {
@@ -494,7 +516,7 @@ public class AgentFrame extends javax.swing.JFrame {
         });
 
         changeAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        changeAgentButton.setText("Ändra Alien");
+        changeAgentButton.setText("Ändra Agent");
         changeAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
         changeAgentButton.setContentAreaFilled(false);
         changeAgentButton.addActionListener(new java.awt.event.ActionListener() {
@@ -504,7 +526,7 @@ public class AgentFrame extends javax.swing.JFrame {
         });
 
         deleteAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        deleteAgentButton.setText("Ta bort Alien");
+        deleteAgentButton.setText("Ta bort Agent");
         deleteAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 2));
         deleteAgentButton.setContentAreaFilled(false);
         deleteAgentButton.addActionListener(new java.awt.event.ActionListener() {
@@ -521,8 +543,8 @@ public class AgentFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(addChangeDeleteAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(changeAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                    .addComponent(deleteAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                    .addComponent(changeAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                    .addComponent(deleteAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
                 .addContainerGap())
         );
         addChangeDeleteAgentLayout.setVerticalGroup(
@@ -534,10 +556,10 @@ public class AgentFrame extends javax.swing.JFrame {
                 .addComponent(changeAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
-        adminTabbedPanel.addTab("Lägg till/ändra Agent", addChangeDeleteAgent);
+        adminTabbedPanel.addTab("Hantera Agenter", addChangeDeleteAgent);
 
         areaChefMainLabel.setText("Visa områdeschef för angivit områdeskontor:");
 
@@ -566,6 +588,102 @@ public class AgentFrame extends javax.swing.JFrame {
         titleForAreaChefPhone.setLabelFor(areaChefPhoneLabel);
         titleForAreaChefPhone.setText("Telefon");
 
+        labelForCurrentChef.setText("Nuvårande kontorschef:");
+
+        labelForChooseChefComboBox.setText("Välj ny kontorschef:");
+
+        chooseChefComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseChefComboBoxsearchAreaComboBoxActionPerformed(evt);
+            }
+        });
+
+        setChefPlace.setText("Sätt kontorschef");
+        setChefPlace.setContentAreaFilled(false);
+        setChefPlace.setFocusPainted(false);
+        setChefPlace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setChefPlacesearchSpecificButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout setChefPanelLayout = new javax.swing.GroupLayout(setChefPanel);
+        setChefPanel.setLayout(setChefPanelLayout);
+        setChefPanelLayout.setHorizontalGroup(
+            setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(setChefPanelLayout.createSequentialGroup()
+                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelForCurrentChef, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(currentChefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelForChooseChefComboBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(setChefPanelLayout.createSequentialGroup()
+                        .addComponent(chooseChefComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(setChefPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+            .addComponent(jSeparator2)
+        );
+        setChefPanelLayout.setVerticalGroup(
+            setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(setChefPanelLayout.createSequentialGroup()
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelForChooseChefComboBox)
+                    .addComponent(labelForCurrentChef))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(currentChefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chooseChefComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(setChefPlace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(9, 9, 9))
+        );
+
+        labelForAreaChef.setText("Välj ny områdeschef:");
+
+        setChefAreaComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setChefAreaComboBoxsearchAreaComboBoxActionPerformed(evt);
+            }
+        });
+
+        setNewAreaChef.setText("Sätt ny områdeschef");
+        setNewAreaChef.setContentAreaFilled(false);
+        setNewAreaChef.setFocusPainted(false);
+        setNewAreaChef.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setNewAreaChefsearchSpecificButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout setAreaChefPanelLayout = new javax.swing.GroupLayout(setAreaChefPanel);
+        setAreaChefPanel.setLayout(setAreaChefPanelLayout);
+        setAreaChefPanelLayout.setHorizontalGroup(
+            setAreaChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+            .addGroup(setAreaChefPanelLayout.createSequentialGroup()
+                .addGroup(setAreaChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelForAreaChef, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                    .addComponent(setChefAreaComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(setNewAreaChef)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        setAreaChefPanelLayout.setVerticalGroup(
+            setAreaChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(setAreaChefPanelLayout.createSequentialGroup()
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelForAreaChef)
+                .addGap(8, 8, 8)
+                .addGroup(setAreaChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(setChefAreaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(setNewAreaChef, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout chefAreaPanelLayout = new javax.swing.GroupLayout(chefAreaPanel);
         chefAreaPanel.setLayout(chefAreaPanelLayout);
         chefAreaPanelLayout.setHorizontalGroup(
@@ -573,7 +691,6 @@ public class AgentFrame extends javax.swing.JFrame {
             .addGroup(chefAreaPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chefAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
                     .addComponent(areaChefMainLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(chefAreaPanelLayout.createSequentialGroup()
                         .addGroup(chefAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -595,7 +712,9 @@ public class AgentFrame extends javax.swing.JFrame {
                                 .addComponent(areaChefLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(searchedAreaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 139, Short.MAX_VALUE)))
+                        .addGap(0, 257, Short.MAX_VALUE))
+                    .addComponent(setChefPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(setAreaChefPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         chefAreaPanelLayout.setVerticalGroup(
@@ -620,11 +739,56 @@ public class AgentFrame extends javax.swing.JFrame {
                     .addComponent(titleForAreaChefPhone)
                     .addComponent(areaChefPhoneLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addComponent(setChefPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(setAreaChefPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         adminTabbedPanel.addTab("Chef/Område", chefAreaPanel);
+
+        addEquipment.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        addEquipment.setText("Lägg till Utrustning");
+        addEquipment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        addEquipment.setContentAreaFilled(false);
+        addEquipment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addEquipmentActionPerformed(evt);
+            }
+        });
+
+        deleteEquipment.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        deleteEquipment.setText("Ta bort utrustning");
+        deleteEquipment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 2));
+        deleteEquipment.setContentAreaFilled(false);
+        deleteEquipment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEquipmentActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout equipmentPanelLayout = new javax.swing.GroupLayout(equipmentPanel);
+        equipmentPanel.setLayout(equipmentPanelLayout);
+        equipmentPanelLayout.setHorizontalGroup(
+            equipmentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(equipmentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(equipmentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addEquipment, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                    .addComponent(deleteEquipment, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        equipmentPanelLayout.setVerticalGroup(
+            equipmentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(equipmentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(181, Short.MAX_VALUE))
+        );
+
+        adminTabbedPanel.addTab("Utrustning", equipmentPanel);
 
         resultLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         resultLabel.setLabelFor(resultTextArea);
@@ -666,17 +830,18 @@ public class AgentFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(resultLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(changePassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(resultScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(resultScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE))
+                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(idLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(95, 95, 95)
+                        .addGap(83, 83, 83)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28))
+                .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -696,9 +861,7 @@ public class AgentFrame extends javax.swing.JFrame {
                         .addComponent(resultScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(changePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE)))
+                    .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -923,6 +1086,30 @@ public class AgentFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_changeAgentButtonActionPerformed
 
+    private void chooseChefComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
+
+    private void setChefPlacesearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefPlacesearchSpecificButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_setChefPlacesearchSpecificButtonActionPerformed
+
+    private void setChefAreaComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
+
+    private void setNewAreaChefsearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setNewAreaChefsearchSpecificButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_setNewAreaChefsearchSpecificButtonActionPerformed
+
+    private void addEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipmentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addEquipmentActionPerformed
+
+    private void deleteEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEquipmentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteEquipmentActionPerformed
+
     /**
      * Searches information from db for a specific alien
      * @param iD to get the identifier for an alien
@@ -1008,6 +1195,7 @@ public class AgentFrame extends javax.swing.JFrame {
     private javax.swing.JButton addAlienButton;
     private javax.swing.JPanel addChangeDeleteAgent;
     private javax.swing.JPanel addChangeDeleteAlien;
+    private javax.swing.JButton addEquipment;
     private javax.swing.JTabbedPane adminTabbedPanel;
     private javax.swing.JLabel areaChefAgentIdLabel;
     private javax.swing.JLabel areaChefLabel;
@@ -1020,22 +1208,25 @@ public class AgentFrame extends javax.swing.JFrame {
     private javax.swing.JButton changeAlienButton;
     private javax.swing.JButton changePassword;
     private javax.swing.JPanel chefAreaPanel;
+    private javax.swing.JComboBox<String> chooseChefComboBox;
+    private javax.swing.JTextField currentChefTextField;
     private javax.swing.JButton deleteAgentButton;
     private javax.swing.JButton deleteAlienButton;
+    private javax.swing.JButton deleteEquipment;
+    private javax.swing.JPanel equipmentPanel;
     private javax.swing.JLabel fromDateLabel;
     private javax.swing.JSpinner fromDateSpinner;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelForArea;
+    private javax.swing.JLabel labelForAreaChef;
+    private javax.swing.JLabel labelForChooseChefComboBox;
+    private javax.swing.JLabel labelForCurrentChef;
     private javax.swing.JLabel labelForName;
     private javax.swing.JLabel labelForPhone;
     private javax.swing.JLabel nameLabel;
@@ -1059,6 +1250,11 @@ public class AgentFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator seperator1;
     private javax.swing.JSeparator seperator2;
     private javax.swing.JSeparator seperator4;
+    private javax.swing.JPanel setAreaChefPanel;
+    private javax.swing.JComboBox<String> setChefAreaComboBox;
+    private javax.swing.JPanel setChefPanel;
+    private javax.swing.JButton setChefPlace;
+    private javax.swing.JButton setNewAreaChef;
     private javax.swing.JLabel titleForAreaChefId;
     private javax.swing.JLabel titleForAreaChefName;
     private javax.swing.JLabel titleForAreaChefPhone;
