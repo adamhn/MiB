@@ -7,6 +7,7 @@
 package mib;
 
 import mib.Helpers.Constant;
+import mib.SubFrames.ResetPasswordFrame;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,18 +23,21 @@ public class AgentFrame extends javax.swing.JFrame {
 
     private static InfDB db;
     private static String agentID;
+    private static String loginEntityType;
     private static boolean isAdmin;
 
     /**
      * Creates new form AgentFrame
      * @param db instance with the appropriate connection to database
      * @param agentID needed to give correct status and data for user with that ID
+     * @param loginEntityType which entity (type) is currently logged in
      * @param isAdmin status to determine wether the user id admin or not.
      */
-    public AgentFrame(InfDB db, String agentID, boolean isAdmin) {
+    public AgentFrame(InfDB db, String agentID, String loginEntityType, boolean isAdmin) {
         initComponents();
         AgentFrame.db = db;
         AgentFrame.agentID = agentID;
+        AgentFrame.loginEntityType = loginEntityType;
         AgentFrame.isAdmin = isAdmin;
 
         // Rquired initializers upon the beginning of AgentFrame life cycle.
@@ -132,7 +136,14 @@ public class AgentFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         searchAlienNameTextField = new javax.swing.JTextField();
         searchSpecificButton = new javax.swing.JButton();
-        addChangeAlien = new javax.swing.JPanel();
+        addChangeDeleteAlien = new javax.swing.JPanel();
+        addAlienButton = new javax.swing.JButton();
+        changeAlienButton = new javax.swing.JButton();
+        deleteAlienButton = new javax.swing.JButton();
+        addChangeDeleteAgent = new javax.swing.JPanel();
+        addAgentButton = new javax.swing.JButton();
+        changeAgentButton = new javax.swing.JButton();
+        deleteAgentButton = new javax.swing.JButton();
         chefAreaPanel = new javax.swing.JPanel();
         areaChefMainLabel = new javax.swing.JLabel();
         searchedAreaComboBox = new javax.swing.JComboBox<>();
@@ -246,6 +257,10 @@ public class AgentFrame extends javax.swing.JFrame {
         idLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         idLabel.setText("Agent: ");
         idLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        adminTabbedPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        adminTabbedPanel.setToolTipText("");
+        adminTabbedPanel.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
 
         searchPlaceLabel.setLabelFor(searchAliensInPlaceButton);
         searchPlaceLabel.setText("Hitta aliens på angiven plats:");
@@ -387,8 +402,8 @@ public class AgentFrame extends javax.swing.JFrame {
                     .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(areaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(placeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchAliensInPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(searchAliensInPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
                 .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchPlaceLabel1)
@@ -412,18 +427,117 @@ public class AgentFrame extends javax.swing.JFrame {
 
         adminTabbedPanel.addTab("Sök", searchPanel);
 
-        javax.swing.GroupLayout addChangeAlienLayout = new javax.swing.GroupLayout(addChangeAlien);
-        addChangeAlien.setLayout(addChangeAlienLayout);
-        addChangeAlienLayout.setHorizontalGroup(
-            addChangeAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
+        addAlienButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        addAlienButton.setText("Lägg till Alien");
+        addAlienButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        addAlienButton.setContentAreaFilled(false);
+        addAlienButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAlienButtonActionPerformed(evt);
+            }
+        });
+
+        changeAlienButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        changeAlienButton.setText("Ändra Alien");
+        changeAlienButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        changeAlienButton.setContentAreaFilled(false);
+        changeAlienButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeAlienButtonActionPerformed(evt);
+            }
+        });
+
+        deleteAlienButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        deleteAlienButton.setText("Ta bort Alien");
+        deleteAlienButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 2));
+        deleteAlienButton.setContentAreaFilled(false);
+        deleteAlienButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteAlienButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout addChangeDeleteAlienLayout = new javax.swing.GroupLayout(addChangeDeleteAlien);
+        addChangeDeleteAlien.setLayout(addChangeDeleteAlienLayout);
+        addChangeDeleteAlienLayout.setHorizontalGroup(
+            addChangeDeleteAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addChangeDeleteAlienLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addChangeDeleteAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(changeAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                    .addComponent(deleteAlienButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        addChangeAlienLayout.setVerticalGroup(
-            addChangeAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
+        addChangeDeleteAlienLayout.setVerticalGroup(
+            addChangeDeleteAlienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addChangeDeleteAlienLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addAlienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changeAlienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteAlienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
-        adminTabbedPanel.addTab("Lägg till/ändra alien", addChangeAlien);
+        adminTabbedPanel.addTab("Lägg till/ändra Alien", addChangeDeleteAlien);
+
+        addAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        addAgentButton.setText("Lägg till Alien");
+        addAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        addAgentButton.setContentAreaFilled(false);
+        addAgentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAgentButtonActionPerformed(evt);
+            }
+        });
+
+        changeAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        changeAgentButton.setText("Ändra Alien");
+        changeAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        changeAgentButton.setContentAreaFilled(false);
+        changeAgentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeAgentButtonActionPerformed(evt);
+            }
+        });
+
+        deleteAgentButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        deleteAgentButton.setText("Ta bort Alien");
+        deleteAgentButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 2));
+        deleteAgentButton.setContentAreaFilled(false);
+        deleteAgentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteAgentButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout addChangeDeleteAgentLayout = new javax.swing.GroupLayout(addChangeDeleteAgent);
+        addChangeDeleteAgent.setLayout(addChangeDeleteAgentLayout);
+        addChangeDeleteAgentLayout.setHorizontalGroup(
+            addChangeDeleteAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addChangeDeleteAgentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addChangeDeleteAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(changeAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                    .addComponent(deleteAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        addChangeDeleteAgentLayout.setVerticalGroup(
+            addChangeDeleteAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addChangeDeleteAgentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changeAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(147, Short.MAX_VALUE))
+        );
+
+        adminTabbedPanel.addTab("Lägg till/ändra Agent", addChangeDeleteAgent);
 
         areaChefMainLabel.setText("Visa områdeschef för angivit områdeskontor:");
 
@@ -481,7 +595,7 @@ public class AgentFrame extends javax.swing.JFrame {
                                 .addComponent(areaChefLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(searchedAreaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 232, Short.MAX_VALUE)))
+                        .addGap(0, 139, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         chefAreaPanelLayout.setVerticalGroup(
@@ -507,7 +621,7 @@ public class AgentFrame extends javax.swing.JFrame {
                     .addComponent(areaChefPhoneLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         adminTabbedPanel.addTab("Chef/Område", chefAreaPanel);
@@ -518,6 +632,11 @@ public class AgentFrame extends javax.swing.JFrame {
 
         changePassword.setText("Byt lösenord");
         changePassword.setContentAreaFilled(false);
+        changePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePasswordActionPerformed(evt);
+            }
+        });
 
         resultScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         resultScrollPanel.setFocusable(false);
@@ -549,7 +668,8 @@ public class AgentFrame extends javax.swing.JFrame {
                             .addComponent(changePassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(resultScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
@@ -576,13 +696,15 @@ public class AgentFrame extends javax.swing.JFrame {
                         .addComponent(resultScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(changePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(adminTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(adminTabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         adminTabbedPanel.getAccessibleContext().setAccessibleName("Sök");
 
-        pack();
+        setSize(new java.awt.Dimension(724, 494));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -770,6 +892,38 @@ public class AgentFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_searchedAreaChefComboBoxActionPerformed
 
     /**
+     * Create and display a ResetPassword jFrame upon button click event
+     * @param evt 
+     */
+    private void changePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordActionPerformed
+       new ResetPasswordFrame(db, agentID, loginEntityType).setVisible(true);
+    }//GEN-LAST:event_changePasswordActionPerformed
+
+    private void addAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAlienButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addAlienButtonActionPerformed
+
+    private void changeAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAlienButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeAlienButtonActionPerformed
+
+    private void deleteAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAlienButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteAlienButtonActionPerformed
+
+    private void deleteAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAgentButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteAgentButtonActionPerformed
+
+    private void addAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAgentButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addAgentButtonActionPerformed
+
+    private void changeAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAgentButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeAgentButtonActionPerformed
+
+    /**
      * Searches information from db for a specific alien
      * @param iD to get the identifier for an alien
      * @return formatted info of alien as string
@@ -844,13 +998,16 @@ public class AgentFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AgentFrame(db, agentID, isAdmin).setVisible(true);
+                new AgentFrame(db, agentID, loginEntityType, isAdmin).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel addChangeAlien;
+    private javax.swing.JButton addAgentButton;
+    private javax.swing.JButton addAlienButton;
+    private javax.swing.JPanel addChangeDeleteAgent;
+    private javax.swing.JPanel addChangeDeleteAlien;
     private javax.swing.JTabbedPane adminTabbedPanel;
     private javax.swing.JLabel areaChefAgentIdLabel;
     private javax.swing.JLabel areaChefLabel;
@@ -859,13 +1016,22 @@ public class AgentFrame extends javax.swing.JFrame {
     private javax.swing.JLabel areaChefPhoneLabel;
     private javax.swing.JComboBox<String> areaComboBox;
     private javax.swing.JLabel areaLabel;
+    private javax.swing.JButton changeAgentButton;
+    private javax.swing.JButton changeAlienButton;
     private javax.swing.JButton changePassword;
     private javax.swing.JPanel chefAreaPanel;
+    private javax.swing.JButton deleteAgentButton;
+    private javax.swing.JButton deleteAlienButton;
     private javax.swing.JLabel fromDateLabel;
     private javax.swing.JSpinner fromDateSpinner;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
