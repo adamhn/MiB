@@ -8,6 +8,7 @@ package mib;
 
 import mib.Helpers.Constant;
 import mib.SubFrames.ResetPasswordFrame;
+import mib.SubFrames.AddAlienFrame;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1063,51 +1064,40 @@ public class AgentFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_changePasswordActionPerformed
 
     private void addAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAlienButtonActionPerformed
-        // TODO add your handling code here:
+       new AddAlienFrame(db).setVisible(true); 
     }//GEN-LAST:event_addAlienButtonActionPerformed
 
     private void changeAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAlienButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_changeAlienButtonActionPerformed
 
     private void deleteAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAlienButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_deleteAlienButtonActionPerformed
 
     private void deleteAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAgentButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_deleteAgentButtonActionPerformed
 
     private void addAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAgentButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_addAgentButtonActionPerformed
 
     private void changeAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAgentButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_changeAgentButtonActionPerformed
 
     private void chooseChefComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
 
     private void setChefPlacesearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefPlacesearchSpecificButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_setChefPlacesearchSpecificButtonActionPerformed
 
     private void setChefAreaComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
 
     private void setNewAreaChefsearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setNewAreaChefsearchSpecificButtonActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_setNewAreaChefsearchSpecificButtonActionPerformed
 
     private void addEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipmentActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_addEquipmentActionPerformed
 
     private void deleteEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEquipmentActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_deleteEquipmentActionPerformed
 
     /**

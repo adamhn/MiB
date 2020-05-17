@@ -8,6 +8,8 @@ package mib.Helpers;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import mib.Helpers.Constant;
 
 public class Validate {
     
@@ -19,7 +21,7 @@ public class Validate {
     static public boolean isTextEmpty(JTextField textField) {
         
         if (textField.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Text field is empty.");
+            JOptionPane.showMessageDialog(null, Constant.ERROR_EMPTY_TEXT_FIELD);
             textField.requestFocus();
             return false;
         } else {
@@ -29,12 +31,25 @@ public class Validate {
     
     /**
      * Checks whether two text fields have the exact same input
-     * @param textField1 first instance for comparison with second text field
-     * @param textField2 second instance for comparison with first text field
+     * @param passwordFieldq first instance for comparison with second text field
+     * @param passwordField2 second instance for comparison with first text field
      * @return true or false whether the text input matches or not
      */
-    static public boolean isTextMatching(JTextField textField1, JTextField textField2) {
+    static public boolean isPasswordMatching(JPasswordField passwordField1, JPasswordField passwordField2) {
         
-        return true;
+        if (passwordField2.equals(passwordField2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    static public boolean isPasswordLengthCorrect(JPasswordField passwordField) {
+        if (passwordField.getPassword().length <= 6) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, Constant.ERROR_PASSWORD_LENGTH);
+            return false;
+        }
     }
 }

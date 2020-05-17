@@ -12,14 +12,19 @@ public class AlienFrame extends javax.swing.JFrame {
 
     private static InfDB db;
     private static String alienID;
+    private static String loginEntityType;
     
     /**
      * Creates new form AlienFrame
+     * @param db
+     * @param alienID
+     * @param loginEntityType
      */
-    public AlienFrame(InfDB db, String alienID) {
+    public AlienFrame(InfDB db, String alienID, String loginEntityType) {
         initComponents();
-        this.db = db;
-        this.alienID = alienID;
+        AlienFrame.db = db;
+        AlienFrame.alienID = alienID;
+        AlienFrame.loginEntityType = loginEntityType;
         
         welcomeLabel.setText("Välkommen Alien " + alienID);
     }
@@ -95,7 +100,7 @@ public class AlienFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AlienFrame(db, alienID).setVisible(true);
+                new AlienFrame(db, alienID, loginEntityType).setVisible(true);
             }
         });
     }

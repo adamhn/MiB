@@ -63,6 +63,11 @@ public class LoginFrame extends javax.swing.JFrame {
         passwordTextField.setToolTipText("Enter your password");
         passwordTextField.setAlignmentX(0.0F);
         passwordTextField.setAlignmentY(0.0F);
+        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordTextFieldActionPerformed(evt);
+            }
+        });
 
         jSeparator1.setAlignmentX(0.0F);
         jSeparator1.setAlignmentY(0.0F);
@@ -148,22 +153,24 @@ public class LoginFrame extends javax.swing.JFrame {
    */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         if (Validate.isTextEmpty(usernameTextField) && Validate.isTextEmpty(passwordTextField)) {
-            String usernameID = usernameTextField.getText();
+            String id = usernameTextField.getText();
             String password = new String(passwordTextField.getPassword());
+            String loginEntityType = "";
             
             if (String.valueOf(loginType.getSelectedItem()).equals(Constant.LOGIN_TYPE_AGENT)) {                
                 System.out.println("Login av typ: Agent");
+                loginEntityType = Constant.ENTITY_TYPE_AGENT;
                 
                 try {
-                    if (password.equals(db.fetchSingle("SELECT LOSENORD FROM AGENT where Agent_ID=" + usernameID))) {
-                        if (db.fetchSingle("SELECT ADMINISTRATOR FROM AGENT WHERE AGENT_ID =" + usernameID).equals("J")){
+                    if (password.equals(db.fetchSingle("SELECT LOSENORD FROM AGENT where Agent_ID=" + id))) {
+                        if (db.fetchSingle("SELECT ADMINISTRATOR FROM AGENT WHERE AGENT_ID =" + id).equals("J")){
                             this.dispose();
-                            new AgentFrame(db, usernameID, true).setVisible(true);
+                            new AgentFrame(db, id, loginEntityType, true).setVisible(true);
                             return;
                         }
                         
                         this.dispose();
-                        new AgentFrame(db, usernameID, false).setVisible(true);
+                        new AgentFrame(db, id, loginEntityType, false).setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null, Constant.ERROR_LOGIN_AGENT);
                     }
@@ -173,10 +180,12 @@ public class LoginFrame extends javax.swing.JFrame {
                 }
             } else if (String.valueOf(loginType.getSelectedItem()).equals(Constant.LOGIN_TYPE_ALIEN)) {
                 System.out.println("Logintyp: Alien");
+                loginEntityType = Constant.ENTITY_TYPE_ALIEN;
+                
                 try {
-                    if (password.equals(db.fetchSingle("SELECT LOSENORD FROM ALIEN where Alien_ID=" + usernameID))) {
+                    if (password.equals(db.fetchSingle("SELECT LOSENORD FROM ALIEN where Alien_ID=" + id))) {
                         this.dispose();
-                        new AlienFrame(db, usernameID).setVisible(true);
+                        new AlienFrame(db, id, loginEntityType).setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null, Constant.ERROR_LOGIN_ALIEN);
                     }
@@ -187,6 +196,10 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
+        loginButton.doClick();
+    }//GEN-LAST:event_passwordTextFieldActionPerformed
 
     /**
      * @param args the command line arguments

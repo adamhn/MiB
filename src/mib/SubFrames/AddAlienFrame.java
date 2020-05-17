@@ -165,14 +165,14 @@ public class AddAlienFrame extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelForRaceComboBox)
                         .addComponent(jLabel1)))
-                .addGap(76, 76, 76)
+                .addGap(40, 40, 40)
                 .addComponent(addNewAlien)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(414, 381));
+        setSize(new java.awt.Dimension(414, 337));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -183,6 +183,8 @@ public class AddAlienFrame extends javax.swing.JFrame {
             String phone = phoneTextField.getText();
             String password = new String(passwordTextField.getPassword());
             
+            int randomNr = new Random().nextInt(10) + 1; // random number between 1-10
+                    
             try { 
                 if (Validate.isPasswordLengthCorrect(passwordTextField)) {
                     int newAlienID = Integer.parseInt(db.getAutoIncrement("ALIEN", "ALIEN_ID"));
@@ -198,27 +200,25 @@ public class AddAlienFrame extends javax.swing.JFrame {
                     String responsibleAgent = db.fetchSingle("SELECT NAMN FROM AGENT WHERE AGENT_ID = " + responsibleAgentID);
 
                     db.insert("INSERT INTO ALIEN VALUES("+ newAlienID + ", \'" + registerDate + "\' , \'" + password + "\', \'" + name +"\', \'" + phone + "\', " + place + ", " + responsibleAgentID + ")");
-
+                    
+                    String raceQuery = "";
+                    
                     if (raceComboBox.getSelectedItem().toString().equals("Worm")){
-                        String raceQuery = "INSERT INTO WORM VALUES (" + newAlienID + ")";
-                        System.out.println(raceQuery);
-                        db.insert(raceQuery);
-                    } // TODO handle other races (look at db for reference)
-//                    else if (raceComboBox.getSelectedItem().toString().equals("Squid")){
-//                        rasFraga = "INSERT INTO SQUID VALUES (" + newAlienID + ", " + Integer.parseInt(nyAlienExtraAttributTextField.getText()) + ")";
-//                        rasInfo = "\nRas: Squid\nArmar: " + nyAlienExtraAttributTextField.getText().toString();
-//                    }
-//                    else if (raceComboBox.getSelectedItem().toString().equals("Boglodite")){
-//                        rasFraga = "INSERT INTO BOGLODITE VALUES (" + newAlienID + ", " + Integer.parseInt(nyAlienExtraAttributTextField.getText()) + ")";
-//                        rasInfo = "\nRas: Boglodite\nBoogies: " + nyAlienExtraAttributTextField.getText().toString();
-//                    }
+                        raceQuery = "INSERT INTO WORM VALUES (" + newAlienID + ")";
+                    } else if (raceComboBox.getSelectedItem().toString().equals("Squid")) {
+                        raceQuery = "INSERT INTO SQUID VALUES (" + newAlienID + ", " + randomNr + ")";
+                    } else if (raceComboBox.getSelectedItem().toString().equals("Boglodite")){
+                        raceQuery = "INSERT INTO BOGLODITE VALUES (" + newAlienID + ", " + randomNr + ")";
+                    }
+                    
+                    db.insert(raceQuery);
                     
                     JOptionPane.showMessageDialog(null, "Ny alien registrerad!" +
-                           "\n\nNamn: " + name +
-                           "\n\nAlienID: " + newAlienID + 
+                           "\nNamn: " + name +
+                           "\nAlienID: " + newAlienID + 
                            "\nLösenord: " + password + 
                            "\nTelefon: " + phone + 
-                           "\n\nRegistreringsdatum: " + registerDate + 
+                           "\nRegistreringsdatum: " + registerDate + 
                            "\nTilldelad plats: " + placeName + 
                            "\nAnsvarig agent: " + responsibleAgent);
 
