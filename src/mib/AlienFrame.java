@@ -6,7 +6,13 @@
  */
 package mib;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JOptionPane;
+import mib.Helpers.Constant;
 import oru.inf.InfDB;
+import oru.inf.InfException;
+import mib.SubFrames.ResetPasswordFrame;
 
 public class AlienFrame extends javax.swing.JFrame {
 
@@ -26,7 +32,41 @@ public class AlienFrame extends javax.swing.JFrame {
         AlienFrame.alienID = alienID;
         AlienFrame.loginEntityType = loginEntityType;
         
-        welcomeLabel.setText("Välkommen Alien " + alienID);
+        setupInitialData();
+    }
+    
+    /**
+     * This method is responsible for setting initial data for labels in Alien Portal
+     * Including but not limited to the following: 
+     * + Responsible chef area
+     * + Aliens in the same area
+     * + Information about logged in Alien
+     */
+    private void setupInitialData() {
+        idLabel.setText("Alien ID: " + alienID);
+        
+        try {
+            nameLabel.setText(db.fetchSingle("SELECT NAMN FROM ALIEN WHERE ALIEN_ID = " + alienID));
+            placeLabel.setText(db.fetchSingle("SELECT BENAMNING FROM PLATS WHERE PLATS_ID = (SELECT PLATS FROM ALIEN WHERE ALIEN_ID = " + alienID + ")"));            
+            phoneLabel.setText(db.fetchSingle("SELECT TELEFON FROM ALIEN WHERE ALIEN_ID = " + alienID));
+            
+            HashMap<String,String> omradesChefen = db.fetchRow(("SELECT * FROM AGENT WHERE AGENT_ID = (SELECT AGENT_ID FROM OMRADESCHEF WHERE OMRADE = (SELECT FINNS_I FROM PLATS JOIN ALIEN ON PLATS.PLATS_ID=ALIEN.PLATS WHERE ALIEN_ID = " + alienID + "))"));
+            chefAreaAgentID.setText(omradesChefen.get("AGENT_ID"));
+            chefAreaName.setText(omradesChefen.get("NAMN"));
+            chefAreaPhone.setText(omradesChefen.get("TELEFON"));  
+            
+            ArrayList<String> result = db.fetchColumn("SELECT NAMN FROM ALIEN JOIN PLATS ON PLATS.PLATS_ID=ALIEN.PLATS WHERE PLATS_ID IN (SELECT PLATS_ID FROM PLATS WHERE FINNS_I = (SELECT FINNS_I FROM PLATS JOIN ALIEN ON ALIEN.PLATS=PLATS.PLATS_ID WHERE ALIEN_ID = " + alienID + "))");
+            
+            String addText = "";
+            for(String namn : result){
+               addText += namn+"\n"; 
+            }
+            
+            aliensInAreaResultTextArea.setText(addText);
+        } catch (InfException exception) {
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
     }
 
     /**
@@ -38,34 +78,240 @@ public class AlienFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        welcomeLabel = new javax.swing.JLabel();
+        titleLabel = new javax.swing.JLabel();
+        idLabel = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        labelForName = new javax.swing.JLabel();
+        labelForPhone = new javax.swing.JLabel();
+        labelForArea = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        phoneLabel = new javax.swing.JLabel();
+        placeLabel = new javax.swing.JLabel();
+        resultLabel = new javax.swing.JLabel();
+        aliensInAreaResultTextArea = new javax.swing.JTextArea();
+        changePassword = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        agentAreaInformationLabel = new javax.swing.JLabel();
+        titleForChefAreaName = new javax.swing.JLabel();
+        chefAreaName = new javax.swing.JLabel();
+        chefAreaAgentID = new javax.swing.JLabel();
+        titleForChefAreaAgentID = new javax.swing.JLabel();
+        titleForChefAreaPhone = new javax.swing.JLabel();
+        chefAreaPhone = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Alien Portal");
 
-        welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcomeLabel.setText("jLabel1");
-        welcomeLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        titleLabel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        titleLabel.setText("MiB - Sektor Skandinavien");
+        titleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        idLabel.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        idLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        idLabel.setText("Agent: ");
+        idLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 0, true));
+
+        labelForName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        labelForName.setForeground(new java.awt.Color(255, 255, 255));
+        labelForName.setText("Namn: ");
+
+        labelForPhone.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        labelForPhone.setForeground(new java.awt.Color(255, 255, 255));
+        labelForPhone.setText("Telefon:");
+
+        labelForArea.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        labelForArea.setForeground(new java.awt.Color(255, 255, 255));
+        labelForArea.setText("Plats:");
+
+        nameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        nameLabel.setForeground(new java.awt.Color(255, 255, 255));
+        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        nameLabel.setText("Alien");
+
+        phoneLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        phoneLabel.setForeground(new java.awt.Color(255, 255, 255));
+        phoneLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        phoneLabel.setText("555-223233");
+
+        placeLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        placeLabel.setForeground(new java.awt.Color(255, 255, 255));
+        placeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        placeLabel.setText("Örebro ");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelForName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelForArea, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelForPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(phoneLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelForName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelForPhone)
+                    .addComponent(phoneLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelForArea)
+                    .addComponent(placeLabel))
+                .addContainerGap())
+        );
+
+        resultLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        resultLabel.setText("Aliens i området:");
+        resultLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        aliensInAreaResultTextArea.setEditable(false);
+        aliensInAreaResultTextArea.setColumns(20);
+        aliensInAreaResultTextArea.setLineWrap(true);
+        aliensInAreaResultTextArea.setRows(1);
+        aliensInAreaResultTextArea.setTabSize(1);
+        aliensInAreaResultTextArea.setWrapStyleWord(true);
+        aliensInAreaResultTextArea.setAutoscrolls(false);
+        aliensInAreaResultTextArea.setHighlighter(null);
+        aliensInAreaResultTextArea.setMinimumSize(new java.awt.Dimension(207, 405));
+        aliensInAreaResultTextArea.setVerifyInputWhenFocusTarget(false);
+
+        changePassword.setText("Byt lösenord");
+        changePassword.setContentAreaFilled(false);
+        changePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePasswordActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+
+        agentAreaInformationLabel.setText("Områdeschef i ditt område:");
+
+        titleForChefAreaName.setText("Namn");
+
+        chefAreaName.setText("---");
+
+        chefAreaAgentID.setText("---");
+
+        titleForChefAreaAgentID.setText("AgentID");
+
+        titleForChefAreaPhone.setText("Telefon");
+
+        chefAreaPhone.setText("---");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(titleForChefAreaName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chefAreaName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(titleForChefAreaAgentID, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chefAreaAgentID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(titleForChefAreaPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chefAreaPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(agentAreaInformationLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(agentAreaInformationLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleForChefAreaName)
+                    .addComponent(chefAreaName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleForChefAreaAgentID)
+                    .addComponent(chefAreaAgentID))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleForChefAreaPhone)
+                    .addComponent(chefAreaPhone))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(199, 199, 199)
-                .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(206, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(resultLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(changePassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(aliensInAreaResultTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(idLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+                        .addGap(83, 83, 83)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(207, 207, 207)
-                .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(idLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(aliensInAreaResultTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(715, 491));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void changePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordActionPerformed
+        new ResetPasswordFrame(db, alienID, loginEntityType).setVisible(true);
+    }//GEN-LAST:event_changePasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,6 +352,25 @@ public class AlienFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel welcomeLabel;
+    private javax.swing.JLabel agentAreaInformationLabel;
+    private javax.swing.JTextArea aliensInAreaResultTextArea;
+    private javax.swing.JButton changePassword;
+    private javax.swing.JLabel chefAreaAgentID;
+    private javax.swing.JLabel chefAreaName;
+    private javax.swing.JLabel chefAreaPhone;
+    private javax.swing.JLabel idLabel;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel labelForArea;
+    private javax.swing.JLabel labelForName;
+    private javax.swing.JLabel labelForPhone;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel phoneLabel;
+    private javax.swing.JLabel placeLabel;
+    private javax.swing.JLabel resultLabel;
+    private javax.swing.JLabel titleForChefAreaAgentID;
+    private javax.swing.JLabel titleForChefAreaName;
+    private javax.swing.JLabel titleForChefAreaPhone;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }
