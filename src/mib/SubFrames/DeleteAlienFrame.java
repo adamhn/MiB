@@ -94,11 +94,6 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
         jLabel6.setText("Välj Alien");
 
         chooseAlienComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-        chooseAlienComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chooseAlienComboBox2ActionPerformed(evt);
-            }
-        });
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -190,6 +185,12 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Searches for an alien name and populates it in combo box
+     * for selection
+     * @param evt 
+     */
+    @SuppressWarnings("unchecked")
     private void searchAliens2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAliens2ActionPerformed
         try {
             ArrayList<HashMap<String,String>> aliens = db.fetchRows("SELECT * FROM ALIEN WHERE NAMN = '" + searchNameTextField2.getText() + "'");
@@ -226,25 +227,10 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchAliens2ActionPerformed
 
-    private void chooseAlienComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseAlienComboBox2ActionPerformed
-
-        try {
-            String[] alienSearch = chooseAlienComboBox2.getSelectedItem().toString().split(" ");
-            int alienID = Integer.parseInt(alienSearch[1]);
-            String race = alienSearch[7];
-
-            HashMap<String,String> chosenAlien = db.fetchRow("SELECT * FROM ALIEN WHERE ALIEN_ID = " + alienID);
-
-            String place = db.fetchSingle("SELECT BENAMNING FROM PLATS WHERE PLATS_ID = " + chosenAlien.get("PLATS"));
-            String area = db.fetchSingle("SELECT BENAMNING FROM OMRADE WHERE OMRADES_ID = (SELECT FINNS_I FROM PLATS WHERE PLATS_ID = " + chosenAlien.get("PLATS") + ")");
-            int locatedIn = Integer.parseInt(db.fetchSingle("SELECT FINNS_I FROM PLATS WHERE PLATS_ID = " + chosenAlien.get("PLATS")));
-
-        } catch (InfException exception) {
-            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
-            System.out.println(exception.getMessage());
-        }
-    }//GEN-LAST:event_chooseAlienComboBox2ActionPerformed
-
+    /**
+     * Removes a selected alien from combo box
+     * @param evt 
+     */
     @SuppressWarnings("unchecked")
     private void removeAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAlienActionPerformed
         if (Validate.isTextFieldAndComboFilled(searchNameTextField2, chooseAlienComboBox2)){
