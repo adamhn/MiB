@@ -6,17 +6,56 @@
  */
 package mib.SubFrames;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import oru.inf.InfDB;
+import oru.inf.InfException;
+import mib.Helpers.Constant;
+import mib.Helpers.Validate;
+
 /**
  *
  * @author Adam Hassan <adamhassan@pm.me>
  */
 public class AddAgentFrame extends javax.swing.JFrame {
 
+    private static InfDB db;
+    private static Random randGenerator = new Random();
+    
     /**
      * Creates new form AddAgentFrame
      */
-    public AddAgentFrame() {
+    public AddAgentFrame(InfDB db) {
         initComponents();
+        
+        this.db = db;
+        this.setTitle("MiB - Lägg till Agent");
+        
+        setAreaComboBox();
+    }
+    
+    /**
+     * Fills area combo box with all areas retrieved from database.
+     */
+    @SuppressWarnings("unchecked")    
+    private void setAreaComboBox(){
+        DefaultComboBoxModel areas = new DefaultComboBoxModel();
+        try{
+            ArrayList<String> areasList = db.fetchColumn("SELECT BENAMNING FROM OMRADE");
+            for (String omrade : areasList){
+                areas.addElement(omrade);
+            }
+            areaComboBox.setModel(areas);
+            areaComboBox.setSelectedIndex(1);
+        }
+        catch(InfException undantag){
+            System.out.println(undantag);
+        }
     }
 
     /**
@@ -34,10 +73,11 @@ public class AddAgentFrame extends javax.swing.JFrame {
         phoneTextField = new javax.swing.JTextField();
         labelForPhoneTextField = new javax.swing.JLabel();
         labelForNameField = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        addNewAlien = new javax.swing.JButton();
+        areaComboBox = new javax.swing.JComboBox<>();
+        adminCheckBox = new javax.swing.JCheckBox();
+        addNewAgentButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,19 +95,17 @@ public class AddAgentFrame extends javax.swing.JFrame {
         labelForNameField.setText("Namn");
         labelForNameField.setAlignmentY(0.0F);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        adminCheckBox.setText("Administratör");
 
-        jCheckBox1.setText("Administratör");
-
-        addNewAlien.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        addNewAlien.setText("Lägg till Agent");
-        addNewAlien.setAlignmentY(0.0F);
-        addNewAlien.setContentAreaFilled(false);
-        addNewAlien.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        addNewAlien.setFocusPainted(false);
-        addNewAlien.addActionListener(new java.awt.event.ActionListener() {
+        addNewAgentButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        addNewAgentButton.setText("Lägg till Agent");
+        addNewAgentButton.setAlignmentY(0.0F);
+        addNewAgentButton.setContentAreaFilled(false);
+        addNewAgentButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        addNewAgentButton.setFocusPainted(false);
+        addNewAgentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addNewAlienchangePasswordActionPerformed(evt);
+                addNewAgentButtonActionPerformed(evt);
             }
         });
 
@@ -83,49 +121,52 @@ public class AddAgentFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Område");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(178, 178, 178))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(186, 186, 186))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(addNewAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(128, 128, 128)))))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(mainTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
+                        .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(adminCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(areaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(labelForNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(labelForPhoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                                    .addComponent(phoneTextField)))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(56, 56, 56))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(addNewAlien, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(labelForPhoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(mainTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(mainTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(labelForNameField)
@@ -137,76 +178,82 @@ public class AddAgentFrame extends javax.swing.JFrame {
                         .addComponent(labelForPhoneTextField)
                         .addGap(26, 26, 26)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(jCheckBox1)
-                .addGap(18, 18, 18)
-                .addComponent(addNewAlien)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(areaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(adminCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addNewAgentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(428, 374));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addNewAlienchangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewAlienchangePasswordActionPerformed
-        if (Validate.isTextEmpty(nameTextField)&& Validate.isTextEmpty(phoneTextField)) {
+    /**
+     * Validate required input fields and register new agent with next available AgentID 
+     * We get the next available ID by using InfDB:s getAutoIncrement() method.
+     * Randomize password
+     * Display information for the new AgentID upon successful register
+     * @param evt 
+     */
+    private void addNewAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewAgentButtonActionPerformed
+       if (Validate.isTextEmpty(nameTextField) && Validate.isTextEmpty(phoneTextField) &&
+            Validate.isNameLengthCorrect(nameTextField) && Validate.isPhoneLengthCorrect(phoneTextField)){                
+            
+            String admin;
+            String isAdmin;
+            if (adminCheckBox.getSelectedObjects() == null){
+                admin = "N";
+                isAdmin = "Nej";
+            }
+            else{
+                admin = "J";
+                isAdmin = "Ja";
+            }
 
-            String name = nameTextField.getText();
-            String phone = phoneTextField.getText();
-            String password = new String(passwordTextField.getPassword());
+            try{
+                int newAgentID = Integer.parseInt(db.getAutoIncrement("AGENT", "AGENT_ID"));
 
-            int randomNr = new Random().nextInt(10) + 1; // random number between 1-10
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                Date newDate = new Date();
+                String employmentDate = dateFormat.format(newDate);
 
-            try {
-                if (Validate.isPasswordLengthCorrect(passwordTextField)) {
-                    int newAlienID = Integer.parseInt(db.getAutoIncrement("ALIEN", "ALIEN_ID"));
+                String password = "" + randGenerator.nextInt(10) + randGenerator.nextInt(10) + randGenerator.nextInt(10) +randGenerator.nextInt(10) +randGenerator.nextInt(10) + randGenerator.nextInt(10);
+                String name = nameTextField.getText();
+                String phone = phoneTextField.getText();
 
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    String registerDate = dateFormat.format(new Date());
-
-                    int place = randGenerator.nextInt(Integer.parseInt(db.fetchSingle("SELECT COUNT(PLATS_ID) FROM PLATS"))) + 1;
-                    String placeName = db.fetchSingle("SELECT BENAMNING FROM PLATS WHERE PLATS_ID = " + place);
-                    String area = db.fetchSingle("SELECT FINNS_I FROM PLATS WHERE PLATS_ID = " + place);
-
-                    int responsibleAgentID = Integer.parseInt(db.fetchSingle("SELECT FIRST 1 AGENT_ID, COUNT(ANSVARIG_AGENT) FROM AGENT LEFT JOIN ALIEN ON ANSVARIG_AGENT = AGENT_ID WHERE OMRADE = " + area + " GROUP BY AGENT_ID ORDER BY COUNT(*) ASC"));
-                    String responsibleAgent = db.fetchSingle("SELECT NAMN FROM AGENT WHERE AGENT_ID = " + responsibleAgentID);
-
-                    db.insert("INSERT INTO ALIEN VALUES("+ newAlienID + ", \'" + registerDate + "\' , \'" + password + "\', \'" + name +"\', \'" + phone + "\', " + place + ", " + responsibleAgentID + ")");
-
-                    String raceQuery = "";
-
-                    if (raceComboBox.getSelectedItem().toString().equals("Worm")){
-                        raceQuery = "INSERT INTO WORM VALUES (" + newAlienID + ")";
-                    } else if (raceComboBox.getSelectedItem().toString().equals("Squid")) {
-                        raceQuery = "INSERT INTO SQUID VALUES (" + newAlienID + ", " + randomNr + ")";
-                    } else if (raceComboBox.getSelectedItem().toString().equals("Boglodite")){
-                        raceQuery = "INSERT INTO BOGLODITE VALUES (" + newAlienID + ", " + randomNr + ")";
-                    }
-
-                    db.insert(raceQuery);
-
-                    JOptionPane.showMessageDialog(null, "Ny alien registrerad!" +
-                        "\nNamn: " + name +
-                        "\nAlienID: " + newAlienID +
-                        "\nLösenord: " + password +
-                        "\nTelefon: " + phone +
-                        "\nRegistreringsdatum: " + registerDate +
-                        "\nTilldelad plats: " + placeName +
-                        "\nAnsvarig agent: " + responsibleAgent);
-
-                    AddAlienFrame.this.dispose();
-                }
-            } catch (InfException exception) {
+                int areaIDs = Integer.parseInt(db.fetchSingle("SELECT OMRADES_ID FROM OMRADE WHERE BENAMNING = '" + areaComboBox.getSelectedItem().toString() + "'"));
+                String area = db.fetchSingle("SELECT BENAMNING FROM OMRADE WHERE OMRADES_ID = " + areaIDs);
+                System.out.println(2);
+                
+                db.insert("INSERT INTO AGENT VALUES("+ newAgentID + ", \'" + name + "\' , \'" + phone + "\', \'" + employmentDate + "\', \'" + admin + "\', \'" + password + "\', " + areaIDs + ")");
+                System.out.println(3);
+                
+                JOptionPane.showMessageDialog(null, "Ny agent registrerad!" +
+                    "\n\nNamn: " + name + 
+                    "\n\nAgentID: " + newAgentID + 
+                    "\nLösenord: " + password + 
+                    "\nTelefon: " + phone + 
+                    "\n\nAnställningsdatum: " + employmentDate + 
+                    "\nOmråde: " + area + 
+                    "\nAdministratör: " + isAdmin);
+                AddAgentFrame.this.dispose();
+            }
+            catch(InfException exception){
                 JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
                 System.out.println(exception.getMessage());
             }
+                
         }
-    }//GEN-LAST:event_addNewAlienchangePasswordActionPerformed
+    }//GEN-LAST:event_addNewAgentButtonActionPerformed
 
     private void cancelButtoncancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtoncancelActionPerformed
-        AddAlienFrame.this.dispose();
+        AddAgentFrame.this.dispose();
     }//GEN-LAST:event_cancelButtoncancelActionPerformed
 
     /**
@@ -239,16 +286,17 @@ public class AddAgentFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddAgentFrame().setVisible(true);
+                new AddAgentFrame(db).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addNewAlien;
+    private javax.swing.JButton addNewAgentButton;
+    private javax.swing.JCheckBox adminCheckBox;
+    private javax.swing.JComboBox<String> areaComboBox;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelForNameField;
     private javax.swing.JLabel labelForPhoneTextField;
     private javax.swing.JLabel mainTitleLabel;
