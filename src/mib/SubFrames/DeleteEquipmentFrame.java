@@ -20,14 +20,14 @@ import mib.Helpers.Constant;
  *
  * @author Adam Hassan <adamhassan@pm.me>
  */
-public class DeleteEquipment extends javax.swing.JFrame {
+public class DeleteEquipmentFrame extends javax.swing.JFrame {
 
     private static InfDB db;
     
     /**
      * Creates new form DeleteEquipment
      */
-    public DeleteEquipment(InfDB db) {
+    public DeleteEquipmentFrame(InfDB db) {
         initComponents();
         
         this.db = db;
@@ -90,7 +90,7 @@ public class DeleteEquipment extends javax.swing.JFrame {
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("Sök Alien");
+        jLabel11.setText("Sök Utrustning");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -224,7 +224,7 @@ public class DeleteEquipment extends javax.swing.JFrame {
                 db.delete("DELETE FROM UTRUSTNING WHERE UTRUSTNINGS_ID  = " + equipmentID);
 
                 JOptionPane.showMessageDialog(null, "Utrustningen är borttagen.");
-                DeleteEquipment.this.dispose();
+                DeleteEquipmentFrame.this.dispose();
             } catch (InfException exception){
                 JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
                 System.out.println(exception.getMessage());
@@ -237,6 +237,7 @@ public class DeleteEquipment extends javax.swing.JFrame {
      * in equipment combo box
      * @param evt 
      */
+    @SuppressWarnings("unchecked")
     private void equipmentTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equipmentTextFieldActionPerformed
         if (Validate.isTextEmpty(equipmentTextField)){
             try {
@@ -291,20 +292,21 @@ public class DeleteEquipment extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DeleteEquipment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteEquipmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DeleteEquipment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteEquipmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DeleteEquipment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteEquipmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DeleteEquipment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteEquipmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DeleteEquipment(db).setVisible(true);
+                new DeleteEquipmentFrame(db).setVisible(true);
             }
         });
     }

@@ -34,6 +34,8 @@ public class AddAlienFrame extends javax.swing.JFrame {
         initComponents();
         
         AddAlienFrame.db = db;
+        
+        this.setTitle("MiB - Lägg till Alien");
     }
 
     /**

@@ -197,7 +197,7 @@
               <Font name="Tahoma" size="12" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="S&#xf6;k Alien"/>
+            <Property name="text" type="java.lang.String" value="S&#xf6;k Utrustning"/>
           </Properties>
         </Component>
       </SubComponents>

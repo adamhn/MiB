@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import mib.Helpers.Constant;
 import oru.inf.InfDB;
 import oru.inf.InfException;
+import mib.Helpers.Validate;
 
 /**
  *
@@ -34,6 +35,10 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
         setupInitialData();
     }
     
+    /**
+     * Setting initial data in frame
+     */
+    @SuppressWarnings("unchecked")
     private void setupInitialData() {
         this.setTitle("MiB - Ändra Alien");
     }
@@ -58,7 +63,24 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
         updateRaceComboBox.setModel(emptyDropdown);
         updateResponsibleAgentComboBox.setModel(emptyDropdown);
     }
- 
+  
+    /**
+     * Removes all information about an alien
+     * @param alienID
+     * @param race 
+     */
+    @SuppressWarnings("unchecked")
+    private void removeAlien(int alienID, String race){
+        try{
+            db.delete("DELETE FROM " + race + " WHERE ALIEN_ID = " + alienID);
+            db.delete("DELETE FROM ALIEN WHERE ALIEN_ID = " + alienID);    
+        }
+        catch(InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_REMOVING_ALIEN);
+            System.out.println(exception.getMessage());
+        }
+    }
+    
     /**
      * Fills out race combo box with information about which races the alien belongs to
      * And to which race the alien can change to
@@ -68,33 +90,31 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     private void setRaceComboBox(String race, int alienID){
-        DefaultComboBoxModel raceComboBox = new DefaultComboBoxModel();
-        raceComboBox.addElement("Worm");
-        raceComboBox.addElement("Boglodite");
-        raceComboBox.addElement("Squid");
-        updateRaceComboBox.setModel(raceComboBox);
+        DefaultComboBoxModel rasBox = new DefaultComboBoxModel();
+        rasBox.addElement("Worm");
+        rasBox.addElement("Boglodite");
+        rasBox.addElement("Squid");
+        updateRaceComboBox.setModel(rasBox);
         updateRaceComboBox.setSelectedItem(race);
         
         try {
-            switch (race) {
-                case "Boglodite":
-                    updateExtraRaceLabel.setText("Antal boogies:");
-                    updateExtraRaceLabel.setVisible(true);
-                    updateExtraRaceTextField.setText(db.fetchSingle("SELECT ANTAL_BOOGIES FROM BOGLODITE WHERE ALIEN_ID =" + alienID));
-                    updateExtraRaceTextField.setVisible(true);
-                    break;
-                case "Squid":
-                    updateExtraRaceLabel.setText("Antal armar:");
-                    updateExtraRaceLabel.setVisible(true);
-                    updateExtraRaceTextField.setText(db.fetchSingle("SELECT ANTAL_ARMAR FROM SQUID WHERE ALIEN_ID =" + alienID));
-                    updateExtraRaceTextField.setVisible(true);
-                    break;
-                default: 
-                    updateExtraRaceLabel.setVisible(false);
-                    updateExtraRaceTextField.setVisible(false);
-                    break;
+            if (race.equals("Boglodite")){
+                updateExtraRaceLabel.setText("Antal boogies:");
+                updateExtraRaceLabel.setVisible(true);
+                updateExtraRaceTextField.setText(db.fetchSingle("SELECT ANTAL_BOOGIES FROM BOGLODITE WHERE ALIEN_ID =" + alienID));
+                updateExtraRaceTextField.setVisible(true);
             }
-        } catch(InfException exception){
+            else if (race.equals("Squid")){
+                updateExtraRaceLabel.setText("Antal armar:");
+                updateExtraRaceLabel.setVisible(true);
+                updateExtraRaceTextField.setText(db.fetchSingle("SELECT ANTAL_ARMAR FROM SQUID WHERE ALIEN_ID =" + alienID));
+                updateExtraRaceTextField.setVisible(true);
+            }
+            else{
+                updateExtraRaceLabel.setVisible(false);
+                updateExtraRaceTextField.setVisible(false);
+            }
+        } catch(InfException exception) {
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
@@ -186,7 +206,6 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         updateAlienIDTextField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        updatePasswordTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         updatePhoneTextField = new javax.swing.JTextField();
         updateDateTextField = new javax.swing.JTextField();
@@ -204,9 +223,10 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
         updateResponsibleAgentComboBox = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
         updateExtraRaceTextField = new javax.swing.JTextField();
+        updatePasswordTextField = new javax.swing.JTextField();
         updateAlien = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         mainTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -353,7 +373,7 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(updateExtraRaceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(updateRaceComboBox, 0, 221, Short.MAX_VALUE)
                             .addComponent(updateExtraRaceTextField)))
@@ -381,9 +401,9 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
                     .addComponent(updateAlienIDTextField)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(updatePasswordTextField)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(updatePasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(updatePhoneTextField)
@@ -424,24 +444,32 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
         updateAlien.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         updateAlien.setText("Uppdatera Alien");
         updateAlien.setContentAreaFilled(false);
+        updateAlien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateAlienActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(updateAlien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(43, 43, 43))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(137, 137, 137)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mainTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
-                .addGap(121, 121, 121))
+                .addGap(88, 88, 88))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(mainTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(180, 180, 180)
+                        .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -459,7 +487,7 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
                 .addGap(92, 92, 92))
         );
 
-        setSize(new java.awt.Dimension(465, 777));
+        setSize(new java.awt.Dimension(440, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -470,7 +498,6 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     private void searchAliensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAliensActionPerformed
-
         try {
             ArrayList<HashMap<String,String>> aliens = db.fetchRows("SELECT * FROM ALIEN WHERE NAMN = '" + searchNameTextField.getText() + "'");
             DefaultComboBoxModel searchedAliensToComboBox = new DefaultComboBoxModel();
@@ -537,12 +564,49 @@ public class ChangeAlienFrame extends javax.swing.JFrame {
             updatePasswordTextField.setText(chosenAlien.get("LOSENORD"));
             updatePhoneTextField.setText(chosenAlien.get("TELEFON"));
             updateDateTextField.setText(chosenAlien.get("REGISTRERINGSDATUM"));
-            
         } catch (InfException exception) {
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
     }//GEN-LAST:event_chooseAlienComboBoxActionPerformed
+
+    /**
+     * Updates alien with new information from fields and combo boxes
+     * @param evt 
+     */
+    private void updateAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAlienActionPerformed
+        if (Validate.isTextFieldAndComboFilled(updateAlienIDTextField, chooseAlienComboBox) && Validate.checkDateFormat(updateDateTextField) &&
+            Validate.isTextEmpty(updateNameTextField) && Validate.isTextEmpty(updatePasswordTextField) &&
+            Validate.isTextEmpty(updateDateTextField) && Validate.isPhoneLengthCorrect(updatePhoneTextField) && Validate.isNameLengthCorrect(updateNameTextField) &&
+            Validate.isNormalPasswordLengthCorrect(updatePasswordTextField)){
+            
+            String[] alienSearch = chooseAlienComboBox.getSelectedItem().toString().split(" ");
+            int alienID = Integer.parseInt(alienSearch[1]);
+            String oldRace = alienSearch[7];
+            
+            try {
+                removeAlien(alienID, oldRace);
+                String responsibleAgent = db.fetchSingle("SELECT AGENT_ID FROM AGENT WHERE NAMN = '" + updateResponsibleAgentComboBox.getSelectedItem().toString() + "'");               
+                String placeID = db.fetchSingle("SELECT PLATS_ID FROM PLATS WHERE BENAMNING = '" + updatePlaceComboBox.getSelectedItem().toString() + "'");
+                System.out.println(placeID);
+                db.insert("INSERT INTO ALIEN VALUES ( " + alienID + " , '" + updateDateTextField.getText().toString() + "' , '" + updatePasswordTextField.getText().toString() + "' , '" + updateNameTextField.getText().toString() + "' , '" + updatePhoneTextField.getText().toString() + "' , " + placeID + " , " + responsibleAgent + ")");
+                System.out.println("Gick också!");   
+                
+                if (updateRaceComboBox.getSelectedItem().toString().equals("Squid") || updateRaceComboBox.getSelectedItem().toString().equals("Boglodite")){
+                    db.insert("INSERT INTO " + updateRaceComboBox.getSelectedItem().toString() + " VALUES ( " + alienID + " , " + updateExtraRaceTextField.getText().toString() + ")");
+                } else{
+                    db.insert("INSERT INTO " + updateRaceComboBox.getSelectedItem().toString() + " VALUES ( " + alienID + ")");
+                }
+                
+                JOptionPane.showMessageDialog(null, "Dina ändringar är sparade!");
+                ChangeAlienFrame.this.dispose();
+            }
+            catch(InfException exception){
+                JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+                System.out.println(exception.getMessage());
+            }
+        }
+    }//GEN-LAST:event_updateAlienActionPerformed
 
     /**
      * @param args the command line arguments

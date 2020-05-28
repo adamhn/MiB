@@ -9,6 +9,13 @@ package mib;
 import mib.Helpers.Constant;
 import mib.SubFrames.ResetPasswordFrame;
 import mib.SubFrames.AddAlienFrame;
+import mib.SubFrames.ChangeAlienFrame;
+import mib.SubFrames.DeleteAlienFrame;
+import mib.SubFrames.AddAgentFrame;
+import mib.SubFrames.AddEquipmentFrame;
+import mib.SubFrames.DeleteEquipmentFrame;
+import mib.SubFrames.ChangeAgentFrame;
+import mib.SubFrames.DeleteAgentFrame;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +58,13 @@ public class AgentFrame extends javax.swing.JFrame {
      * Displays admin tag on id labels for users with admin status
      */
     private void setupInitialData() {
+        this.setTitle("MiB - Agent");
+        
+        initWorkplaceChefTextField();
+        setAgentsInArea();
+        setAreaComboBox(areaComboBox);
+        setAreaComboBox(searchedAreaComboBox);
+        
         try {
             nameLabel.setText(db.fetchSingle("SELECT NAMN FROM AGENT WHERE AGENT_ID =" + agentID));
             phoneLabel.setText(db.fetchSingle("SELECT TELEFON FROM AGENT WHERE AGENT_ID =" + agentID));
@@ -59,9 +73,6 @@ public class AgentFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
-        
-        setAreaComboBox(areaComboBox);
-        setAreaComboBox(searchedAreaComboBox);
     }
     
     /**
@@ -80,6 +91,28 @@ public class AgentFrame extends javax.swing.JFrame {
 
             valdComboBox.setModel(areas);
         } catch (InfException exception) {
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
+    }
+    
+    /**
+     * Gets all agents for the purpose of choosing a new work place chef
+     */
+    @SuppressWarnings("unchecked")
+    private void setAgentsInArea(){
+        DefaultComboBoxModel agentsInArea = new DefaultComboBoxModel();
+
+        try {
+            ArrayList<HashMap<String, String>> agenternaIDatabasen = db.fetchRows("SELECT * FROM AGENT ");
+            
+            for (HashMap agenterna : agenternaIDatabasen){
+                agentsInArea.addElement("AgentID: " + agenterna.get("AGENT_ID") + " | Namn: " + agenterna.get("NAMN"));
+            }
+            
+            chooseChefComboBox.setModel(agentsInArea);
+        } catch (InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
     }
@@ -90,7 +123,7 @@ public class AgentFrame extends javax.swing.JFrame {
      */
     private void setupAdminPermissions(boolean isAdmin) {
         if (!isAdmin) {
-            idLabel.setText("Agent: " + agentID);
+            idLabel.setText("Agent ID: " + agentID);
             
             adminTabbedPanel.remove(addChangeDeleteAgent);
             deleteEquipment.setVisible(false);
@@ -99,6 +132,23 @@ public class AgentFrame extends javax.swing.JFrame {
             setAreaChefPanel.setVisible(false);
         } else {
             idLabel.setText("Agent: " + agentID + " - Administratör");
+        }
+    }
+        
+    /**
+     * Gets current work place chef when frame initiates
+     */
+    @SuppressWarnings("unchecked")
+    private void initWorkplaceChefTextField(){
+
+        try {
+            String getAgentID = db.fetchSingle("SELECT AGENT_ID FROM KONTORSCHEF");
+           
+            HashMap<String,String> hämtaOC = db.fetchRow("SELECT * FROM AGENT WHERE AGENT_ID = "+getAgentID);
+            currentChefTextField.setText("Namn: "+ hämtaOC.get("NAMN")+" | Agent ID: "+ hämtaOC.get("AGENT_ID") );
+        } catch (InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
         }
     }
     
@@ -277,7 +327,7 @@ public class AgentFrame extends javax.swing.JFrame {
 
         idLabel.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         idLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        idLabel.setText("Agent: ");
+        idLabel.setText("Alien: ");
         idLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         adminTabbedPanel.setToolTipText("");
@@ -613,16 +663,16 @@ public class AgentFrame extends javax.swing.JFrame {
         setChefPanelLayout.setHorizontalGroup(
             setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(setChefPanelLayout.createSequentialGroup()
-                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelForCurrentChef, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(currentChefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelForCurrentChef, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(currentChefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(setChefPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelForChooseChefComboBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(setChefPanelLayout.createSequentialGroup()
-                        .addComponent(chooseChefComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(setChefPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(chooseChefComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setChefPlace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
             .addComponent(jSeparator2)
         );
@@ -868,7 +918,7 @@ public class AgentFrame extends javax.swing.JFrame {
 
         adminTabbedPanel.getAccessibleContext().setAccessibleName("Sök");
 
-        setSize(new java.awt.Dimension(724, 494));
+        setSize(new java.awt.Dimension(724, 500));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1036,6 +1086,7 @@ public class AgentFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     private void searchedAreaChefComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchedAreaChefComboBoxActionPerformed
         String searchedArea = searchedAreaComboBox.getSelectedItem().toString();
+        DefaultComboBoxModel agentsInArea = new DefaultComboBoxModel();
 
         try {
             HashMap<String, String> areaChef = db.fetchRow("SELECT * FROM AGENT WHERE AGENT_ID = (SELECT AGENT_ID FROM OMRADESCHEF WHERE OMRADE = (SELECT OMRADES_ID FROM OMRADE WHERE BENAMNING = \'" + searchedArea + "\'))");
@@ -1049,6 +1100,19 @@ public class AgentFrame extends javax.swing.JFrame {
                 areaChefAgentIdLabel.setText(areaChef.get("AGENT_ID"));
                 areaChefPhoneLabel.setText(areaChef.get("TELEFON"));
             }
+            
+            ArrayList<HashMap<String, String>> areaAgents = db.fetchRows("SELECT * FROM AGENT WHERE OMRADE = (SELECT OMRADES_ID FROM OMRADE WHERE BENAMNING = '" + searchedAreaComboBox.getSelectedItem().toString() + "')");
+            
+            if (areaAgents == null){
+                agentsInArea.addElement("-");
+            }
+            else{
+                for (HashMap agenterna : areaAgents){
+                    agentsInArea.addElement("AgentID: " + agenterna.get("AGENT_ID") + " | Namn: " + agenterna.get("NAMN"));
+                }
+            }
+            
+            setChefAreaComboBox.setModel(agentsInArea);
         } catch (InfException exception) {
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
@@ -1068,36 +1132,79 @@ public class AgentFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addAlienButtonActionPerformed
 
     private void changeAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAlienButtonActionPerformed
+       new ChangeAlienFrame(db).setVisible(true);
     }//GEN-LAST:event_changeAlienButtonActionPerformed
 
     private void deleteAlienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAlienButtonActionPerformed
+        new DeleteAlienFrame(db).setVisible(true);
     }//GEN-LAST:event_deleteAlienButtonActionPerformed
 
     private void deleteAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAgentButtonActionPerformed
+        new DeleteAgentFrame(db).setVisible(true);
     }//GEN-LAST:event_deleteAgentButtonActionPerformed
 
     private void addAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAgentButtonActionPerformed
+        new AddAgentFrame(db).setVisible(true);
     }//GEN-LAST:event_addAgentButtonActionPerformed
 
     private void changeAgentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAgentButtonActionPerformed
+        new ChangeAgentFrame(db).setVisible(true);
     }//GEN-LAST:event_changeAgentButtonActionPerformed
 
     private void chooseChefComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
     }//GEN-LAST:event_chooseChefComboBoxsearchAreaComboBoxActionPerformed
 
+    /**
+     * Retrieves current work place chef in object form and switches to new work place chef.
+     * @param evt 
+     */
     private void setChefPlacesearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefPlacesearchSpecificButtonActionPerformed
+        try {
+            String[] agentSearch = chooseChefComboBox.getSelectedItem().toString().split(" ");
+            int agentID = Integer.parseInt(agentSearch[1]);
+            db.update("UPDATE KONTORSCHEF SET AGENT_ID = " + agentID + " WHERE KONTORSBETECKNING = 'Örebrokontoret'");
+            initWorkplaceChefTextField();
+        }
+        catch(InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
     }//GEN-LAST:event_setChefPlacesearchSpecificButtonActionPerformed
 
     private void setChefAreaComboBoxsearchAreaComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
     }//GEN-LAST:event_setChefAreaComboBoxsearchAreaComboBoxActionPerformed
 
+    /**
+     * Sets new area chef depends on which area is chosen in area box
+     * and which agents is available within the area
+     */
+    @SuppressWarnings("unchecked")
     private void setNewAreaChefsearchSpecificButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setNewAreaChefsearchSpecificButtonActionPerformed
+        try{
+            String[] agentSök = setChefAreaComboBox.getSelectedItem().toString().split(" ");
+            int agentID = Integer.parseInt(agentSök[1]);
+            
+            String getAreasID = db.fetchSingle("SELECT OMRADES_ID FROM OMRADE WHERE BENAMNING = '" + searchedAreaComboBox.getSelectedItem().toString() + "'");
+            String query = db.fetchSingle("SELECT AGENT_ID FROM OMRADESCHEF WHERE OMRADE = " + getAreasID);
+            if (query == null){
+                db.insert("INSERT INTO OMRADESCHEF VALUES ( " + agentID + " , " + getAreasID + ")");
+            } else {
+                db.update("UPDATE OMRADESCHEF SET AGENT_ID = " + agentID + " WHERE OMRADE = " + getAreasID);
+            }
+            
+            searchedAreaChefComboBoxActionPerformed(evt);
+        } catch(InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
     }//GEN-LAST:event_setNewAreaChefsearchSpecificButtonActionPerformed
 
     private void addEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipmentActionPerformed
+        new AddEquipmentFrame(db).setVisible(true);
     }//GEN-LAST:event_addEquipmentActionPerformed
 
     private void deleteEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEquipmentActionPerformed
+       new DeleteEquipmentFrame(db).setVisible(true); 
     }//GEN-LAST:event_deleteEquipmentActionPerformed
 
     /**

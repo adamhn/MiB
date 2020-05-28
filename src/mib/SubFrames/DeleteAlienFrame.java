@@ -29,6 +29,8 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
         initComponents();
         
         this.db = db;
+        
+        this.setTitle("MiB - Ta bort Alien");
     }
     
     /**
@@ -62,9 +64,9 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         searchNameTextField2 = new javax.swing.JTextField();
-        searchAliens2 = new javax.swing.JButton();
+        searchAliens = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        chooseAlienComboBox2 = new javax.swing.JComboBox<>();
+        chooseAlienComboBox = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         removeAlien = new javax.swing.JButton();
 
@@ -82,18 +84,18 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Ange Namn");
 
-        searchAliens2.setText("Sök Alien");
-        searchAliens2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        searchAliens2.setContentAreaFilled(false);
-        searchAliens2.addActionListener(new java.awt.event.ActionListener() {
+        searchAliens.setText("Sök Alien");
+        searchAliens.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        searchAliens.setContentAreaFilled(false);
+        searchAliens.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchAliens2ActionPerformed(evt);
+                searchAliensActionPerformed(evt);
             }
         });
 
         jLabel6.setText("Välj Alien");
 
-        chooseAlienComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
+        chooseAlienComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -106,6 +108,7 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
@@ -113,27 +116,26 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(searchNameTextField2)
+                                .addComponent(searchNameTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchAliens2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(chooseAlienComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(searchAliens, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(chooseAlienComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addContainerGap()
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchNameTextField2)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(searchAliens2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchAliens, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chooseAlienComboBox2))
+                    .addComponent(chooseAlienComboBox))
                 .addContainerGap())
         );
 
@@ -154,18 +156,18 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(180, 180, 180)
-                        .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(mainTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(13, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(removeAlien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(62, 62, 62)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(170, 170, 170)
+                                .addComponent(seperator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(mainTitleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(removeAlien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,10 +180,10 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(removeAlien, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(440, 400));
+        setSize(new java.awt.Dimension(514, 387));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -191,7 +193,7 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
      * @param evt 
      */
     @SuppressWarnings("unchecked")
-    private void searchAliens2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAliens2ActionPerformed
+    private void searchAliensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAliensActionPerformed
         try {
             ArrayList<HashMap<String,String>> aliens = db.fetchRows("SELECT * FROM ALIEN WHERE NAMN = '" + searchNameTextField2.getText() + "'");
             DefaultComboBoxModel searchedAliensToComboBox = new DefaultComboBoxModel();
@@ -220,12 +222,12 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
                     searchedAliensToComboBox.addElement(everyAlien);
                 }
             }
-            chooseAlienComboBox2.setModel(searchedAliensToComboBox);
+            chooseAlienComboBox.setModel(searchedAliensToComboBox);
         } catch(InfException exception){
             JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
             System.out.println(exception.getMessage());
         }
-    }//GEN-LAST:event_searchAliens2ActionPerformed
+    }//GEN-LAST:event_searchAliensActionPerformed
 
     /**
      * Removes a selected alien from combo box
@@ -233,8 +235,8 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     private void removeAlienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAlienActionPerformed
-        if (Validate.isTextFieldAndComboFilled(searchNameTextField2, chooseAlienComboBox2)){
-            String[] alienSearch = chooseAlienComboBox2.getSelectedItem().toString().split(" ");
+        if (Validate.isTextFieldAndComboFilled(searchNameTextField2, chooseAlienComboBox)){
+            String[] alienSearch = chooseAlienComboBox.getSelectedItem().toString().split(" ");
             int alienID = Integer.parseInt(alienSearch[1]);
             String oldRace = alienSearch[7];
 
@@ -281,14 +283,14 @@ public class DeleteAlienFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> chooseAlienComboBox2;
+    private javax.swing.JComboBox<String> chooseAlienComboBox;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel mainTitleLabel;
     private javax.swing.JButton removeAlien;
-    private javax.swing.JButton searchAliens2;
+    private javax.swing.JButton searchAliens;
     private javax.swing.JTextField searchNameTextField2;
     private javax.swing.JSeparator seperator1;
     // End of variables declaration//GEN-END:variables

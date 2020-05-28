@@ -22,14 +22,18 @@ public final class Constant {
     public static final String SUCCESS_PASSWORD_SET = "Nytt lösenord satt.\nAnvänd ditt nya lösenord nästa gång du loggar in.";
     
     public static final String ERROR_DATABASE = "Någonting gick fel med vid upphämtning av databasen. Försök igen!";
+    public static final String ERROR_REMOVING_ALIEN = "Kunde inte ta bort alien.";
     public static final String ERROR_LOGIN_AGENT = "Ditt Agent ID eller lösenord är fel.";
     public static final String ERROR_LOGIN_ALIEN = "Ditt Alien ID eller lösenord är fel.";
     public static final String ERROR_EMPTY_TEXT_FIELD = "Vänligen fyll i text fältet.";
     public static final String ERROR_PASSWORD_LENGTH = "Lösenordet måste vara 6 tecken eller mindre.";
     public static final String ERROR_OLD_PASSWORD_INCORRECT = "Ditt gammla lösenord är fel.";
     
-    
-    
+    public static final String VALIDATE_NAME_LENGTH = "Namnet är för långt! Max 20 tecken.";
+    public static final String VALIDATE_PHONE_NUMBER = "Telefonnumret är för långt.";
+    public static final String VALIDATE_NO_INTEGERS = "Värdet måste bestå av endast heltal.";
+    public static final String VALIDATE_DATE_FORMAT = "Datumformatet ska vara numeriskt, enligt detta format 'ÅÅÅ-MM-DD'.";
+    public static final String VALIDATE_EMPTY_BOX = "Inget valt i listan.";
     
     private Constant() { }
 }

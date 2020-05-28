@@ -6,21 +6,90 @@
  */
 package mib.SubFrames;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import mib.Helpers.Constant;
+import oru.inf.InfException;
+import oru.inf.InfDB;
+
 /**
  *
  * @author Adam Hassan <adamhassan@pm.me>
  */
 public class DeleteAgentFrame extends javax.swing.JFrame {
 
+    private static InfDB db;
+    
     /**
      * Creates new form DeleteAgentFrame
      */
-    public DeleteAgentFrame() {
+    public DeleteAgentFrame(InfDB db) {
         initComponents();
+        
+        this.db = db;
         
         this.setTitle("MiB - Ta bort Agent");
     }
 
+    /**
+     * Fills combo box with selectable agents to choose from
+     * all agents with matching text string appears in combo box
+     * @param searchName input search string
+     */
+    @SuppressWarnings("unchecked")
+    private void setComboBox(String searchName){
+        try {
+            ArrayList<HashMap<String,String>> agent = db.fetchRows("SELECT * FROM AGENT WHERE NAMN = '" + searchName + "'");
+            DefaultComboBoxModel searchedAgentToComboBox = new DefaultComboBoxModel();
+            
+            if (agent == null){
+                searchedAgentToComboBox.addElement("-");
+            } else {
+                for(HashMap listAgent : agent){
+                    String everyAgent = "AgentID: " + listAgent.get("AGENT_ID") + " | Telefon: " +  listAgent.get("TELEFON") + " | Område: " +  db.fetchSingle("SELECT BENAMNING FROM OMRADE WHERE OMRADES_ID = " + listAgent.get("OMRADE"));
+                    searchedAgentToComboBox.addElement(everyAgent);
+                }
+            }
+            chooseAgentComboBox.setModel(searchedAgentToComboBox);
+        }
+        catch(InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
+    }
+    
+    /**
+     * Deletes an agent with specified agentID from database
+     * Removes all information related to that AgentID
+     * @param agentID 
+     */
+    @SuppressWarnings("unchecked")
+    private void deleteAgent(int agentID){
+        
+        try{
+            String testSträng = db.fetchSingle("SELECT NAMN FROM ALIEN WHERE ANSVARIG_AGENT = " + agentID);
+            if (testSträng != null){
+                JOptionPane.showMessageDialog(null, "Agenten är ansvarig för en eller flera alien och kan därför inte tas bort!");
+            }
+            else{
+                db.delete("DELETE FROM INNEHAR_UTRUSTNING WHERE AGENT_ID = " + agentID);
+                db.delete("DELETE FROM INNEHAR_FORDON WHERE AGENT_ID = " + agentID);
+                db.delete("DELETE FROM FALTAGENT WHERE AGENT_ID = " + agentID);
+                db.delete("DELETE FROM KONTORSCHEF WHERE AGENT_ID = " + agentID);
+                db.delete("DELETE FROM OMRADESCHEF WHERE AGENT_ID = " + agentID);            
+                db.delete("DELETE FROM AGENT WHERE AGENT_ID = " + agentID);
+            }
+            
+            JOptionPane.showMessageDialog(null, "Agenten är borttagen.");
+        }
+        catch(InfException exception){
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,6 +134,12 @@ public class DeleteAgentFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Ange Namn");
 
+        searchNameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchNameTextFieldActionPerformed(evt);
+            }
+        });
+
         searchAgent.setText("Sök Agent");
         searchAgent.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         searchAgent.setContentAreaFilled(false);
@@ -77,6 +152,11 @@ public class DeleteAgentFrame extends javax.swing.JFrame {
         jLabel6.setText("Välj Agent");
 
         chooseAgentComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
+        chooseAgentComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseAgentComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -158,13 +238,32 @@ public class DeleteAgentFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Deletes an agent and clears out fields with other reset functionality
+     * @param evt 
+     */
     private void removeAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAgentActionPerformed
-        
+
+        String[] agentSearch = chooseAgentComboBox.getSelectedItem().toString().split(" ");
+        int agentID = Integer.parseInt(agentSearch[1]);
+
+        deleteAgent(agentID);
+        searchNameTextField.setText("");
+        searchNameTextFieldActionPerformed(evt);
+        chooseAgentComboBoxActionPerformed(evt);
     }//GEN-LAST:event_removeAgentActionPerformed
 
     private void searchAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAgentActionPerformed
-        
+        searchNameTextFieldActionPerformed(evt);
     }//GEN-LAST:event_searchAgentActionPerformed
+
+    private void searchNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNameTextFieldActionPerformed
+        setComboBox(searchNameTextField.getText().toString());
+    }//GEN-LAST:event_searchNameTextFieldActionPerformed
+
+    private void chooseAgentComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseAgentComboBoxActionPerformed
+        
+    }//GEN-LAST:event_chooseAgentComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,7 +295,7 @@ public class DeleteAgentFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DeleteAgentFrame().setVisible(true);
+                new DeleteAgentFrame(db).setVisible(true);
             }
         });
     }

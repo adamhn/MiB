@@ -79,7 +79,7 @@ public class AddAgentFrame extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         mainTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -177,7 +177,6 @@ public class AddAgentFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(labelForPhoneTextField)
                         .addGap(26, 26, 26)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(areaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,7 +186,7 @@ public class AddAgentFrame extends javax.swing.JFrame {
                 .addComponent(addNewAgentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(428, 374));
