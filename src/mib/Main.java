@@ -31,20 +31,17 @@ public class Main {
     }
     
     /**
-     * Handling database connection with respect to 
-     * different FDB locations locally
+     * Handling database connection 
      */
     static private void connectToDatabase(){
         try {
-            db = new InfDB("C:\\db\\MIBDB.FDB"); // Path for Windows users
-        } catch (InfException winPathException) {
-            try {
-                System.out.println(winPathException.getMessage());
-                db = new InfDB("/Documents/db/MIBDB.FDB"); // Path for Mac users
-            } catch (InfException exception) {
-                JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
-                System.out.println(exception.getMessage());
-            } 
+            String currentUser = System.getProperty("user.dir");
+            String searchPath = currentUser + ("/dist/MIBDB.FDB");
+            
+            db = new InfDB(searchPath);
+        } catch (InfException exception) {
+            JOptionPane.showMessageDialog(null, Constant.ERROR_DATABASE);
+            System.out.println(exception.getMessage());
         }
     }
 }
