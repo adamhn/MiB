@@ -144,8 +144,7 @@ public class AddEquipmentFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     private void registerEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerEquipmentActionPerformed
-        if (Validate.isTextEmpty(equipmentNameTextField) && Validate.isTextEmpty(extraTextField) &&
-            Validate.isNameLengthCorrect(equipmentNameTextField)){
+        if (Validate.isTextEmpty(equipmentNameTextField) && Validate.isTextEmpty(extraTextField)){
             try{
                 int utrustningsID = 0;
                 utrustningsID = Integer.parseInt(db.getAutoIncrement("UTRUSTNING", "UTRUSTNINGS_ID"));
